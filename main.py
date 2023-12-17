@@ -1,5 +1,7 @@
 #import it
 from fastapi import FastAPI
+from schemas import PlaylistSchema
+
 
 # initialize it
 app = FastAPI()
@@ -20,8 +22,9 @@ def playlist():
     return {}
 
 # create a playlist
-@app.post('/playlists')
-def create_playlist():
+@app.post('/playlists') 
+def create_playlist(playlist: PlaylistSchema):
+    print(playlist)
     return {"message": "Playlist Created succesfully"}
 
 #update a playlist
