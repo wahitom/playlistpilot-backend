@@ -1,5 +1,8 @@
 #import it
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends 
+from sqlalchemy.orm import Session
+from database import get_db
+from models import Playlist
 from schemas import PlaylistSchema
 
 
@@ -13,19 +16,30 @@ def index():
 
 # get all playlists
 @app.get('/playlists')
-def playlists():
+def playlists(db: Session = Depends(get_db)):
     return []
 
-# get a single playlist
+# get a single playlist 
 @app.get('/playlists/{playlist_id}')
 def playlist():
     return {}
 
 # create a playlist
 @app.post('/playlists') 
-def create_playlist(playlist: PlaylistSchema):
-    print(playlist)
-    return {"message": "Playlist Created succesfully"}
+def create_playlist(playlist: PlaylistSchema, db: Session = Depends(get_db)):
+   # print(playlist)
+    # the ** unpacks a dict and passes it as key value pairs 
+    new_playlist = Playlist(**playlist.model_dump()) 
+     # this will create a dict out of your info as it is being passed to the server
+
+    
+    # adds the playlist to the transaction ie one by one and if anything fails it all fails 
+    db.add(new_playlist)
+    # commit the transaction
+    db.commit()
+    # get the playlist from the database again
+    db.refresh(new_playlist)
+    return {"message": "Playlist Created succesfully", "playlist": new_playlist}
 
 #update a playlist
 @app.patch('/playlists/{playlist_id}')

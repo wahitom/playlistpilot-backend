@@ -14,5 +14,5 @@ class Playlist(Base):
     description = Column(VARCHAR, nullable=False )
     image = Column(VARCHAR)
     rating = Column(Integer())
-    date_created = Column(TIMESTAMP)
+    date_created = Column(VARCHAR)
     
