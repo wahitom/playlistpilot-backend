@@ -10,8 +10,8 @@ class Playlist(Base):
 
     # define columns 
     id = Column(Integer(), primary_key = True)
-    title = Column(Text())
-    description = Column(VARCHAR)
+    title = Column(Text(), nullable = False)
+    description = Column(VARCHAR, nullable=False )
     image = Column(VARCHAR)
     rating = Column(Integer())
     date_created = Column(TIMESTAMP)

@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 # connect to our postgresql db
-engine = create_engine("postgresql://admin:GSSQIRooQyQnpUJkB0j0uPvQwPWfXbXK@dpg-clvgjnla73kc73bpiaog-a.frankfurt-postgres.render.com/playlists", echo=True)
+engine = create_engine("postgresql://admin:GSSQIRooQyQnpUJkB0j0uPvQwPWfXbXK@dpg-clvgjnla73kc73bpiaog-a.frankfurt-postgres.render.com/playlists", echo = True)
 
 # create connection with sessionmaker 
 SessionLocal = sessionmaker(bind=engine) 
@@ -13,4 +13,4 @@ def get_db():
     try: 
         yield db
     finally:
-        db.close()
+        db.close() 
