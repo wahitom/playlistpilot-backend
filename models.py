@@ -17,6 +17,8 @@ class Playlist(Base):
     rating = Column(Integer(), nullable = False)
     date_created = Column(VARCHAR, nullable = False)
 
+    user_id = Column(Integer(), ForeignKey('users.id'))
+
     songs = relationship("Song", backref='playlist')
 
 

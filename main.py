@@ -1,5 +1,6 @@
 #import it
 from fastapi import FastAPI, Depends, HTTPException, status, Response
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import get_db
 from models import Playlist
@@ -8,6 +9,15 @@ from schemas import PlaylistSchema
 
 # initialize it
 app = FastAPI()
+
+origins = ["*"]
+
+app.add_middleware(CORSMiddleware,
+                   allow_origins=origins,
+                    allow_credentials=True,
+                    allow_methods=["*"],
+                    allow_headers=["*"],
+    )
 
 # define a route 
 @app.get('/')
