@@ -12,7 +12,7 @@ class Playlist(Base):
     id = Column(Integer(), primary_key = True)
     title = Column(Text(), nullable = False)
     description = Column(VARCHAR, nullable=False )
-    image = Column(VARCHAR)
-    rating = Column(Integer())
-    date_created = Column(VARCHAR)
+    image = Column(VARCHAR, nullable=False)
+    rating = Column(Integer(), nullable = False)
+    date_created = Column(VARCHAR, nullable = False)
     
