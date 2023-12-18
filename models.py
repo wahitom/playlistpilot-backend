@@ -15,4 +15,15 @@ class Playlist(Base):
     image = Column(VARCHAR, nullable=False)
     rating = Column(Integer(), nullable = False)
     date_created = Column(VARCHAR, nullable = False)
+
+
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(Integer(), primary_key=True)
+    name = Column(Text(), nullable = False) 
+
+
+# class Songs(Base):
+#     __tablename__ = "songs "
     

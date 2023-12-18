@@ -9,3 +9,6 @@ class PlaylistSchema(BaseModel):
     image : str
     rating : int 
     date_created : str
+
+class UserSchema(BaseModel):
+    name: str
