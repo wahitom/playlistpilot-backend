@@ -3,7 +3,7 @@ from fastapi import FastAPI, Depends, HTTPException, status, Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import get_db
-from models import Playlist, Song
+from models import Playlist, Song, User
 from schemas import PlaylistSchema, UserSchema, SongSchema
 
 
@@ -75,7 +75,6 @@ def delete_playlist(playlist_id: int, db: Session = Depends(get_db)):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-
 # get all songs
 @app.get('/songs')
 def playlists(db: Session = Depends(get_db)):
@@ -83,11 +82,40 @@ def playlists(db: Session = Depends(get_db)):
     return songs
 
 
-#create new route for adding songs to the playlist
+
 @app.post('/songs')
 def song_added(song: SongSchema, db: Session = Depends(get_db)):
-    print(song_added)
+    # Check if a song exists on the playlist using its name
+    existing_song = db.query(Song).filter(Song.name == song.name).first()
 
-    return {"message" : "Song added successfully "}
+    if existing_song is None:
+        # Song doesn't exist, so we create it
+        new_song = Song(name=song.name, playlist_id=song.playlist_id)
+
+        db.add(new_song)
+        db.commit()
+    
+    else:
+        # Check if the song already exists on the playlist
+        duplicate_song = db.query(Song).filter(
+            Song.playlist_id == song.playlist_id,
+            Song.name == song.name
+        ).first()
+
+        if duplicate_song is None:
+            # The song does not exist on the playlist, so we add it
+            new_song = Song(name=song.name, playlist_id=song.playlist_id)
+
+            db.add(new_song)
+            db.commit()
+        
+        else:
+            # If the playlist already has the song we are trying to add, throw an error
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail="Song already added to the playlist"
+            )
+
+    return {"message": "Song added successfully"}
 
 
