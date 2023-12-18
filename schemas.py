@@ -15,5 +15,5 @@ class UserSchema(BaseModel):
 
 class SongSchema(BaseModel):
     name : str
-    playist_id: int
-    user_id: int 
+    playlist_id: int
+ 

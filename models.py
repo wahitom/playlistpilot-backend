@@ -37,7 +37,8 @@ class Song(Base):
 
     id = Column(Integer(), primary_key=True)
     name = Column(Text(), nullable=False)
+    #artist = Column(Text(), nullable=False)
 
     #foreign keys
     playlist_id = Column(Integer(), ForeignKey('playlists.id'))
-    user_id = Column(Integer(), ForeignKey('users.id'))
+    #user_id = Column(Integer(), ForeignKey('users.id'))

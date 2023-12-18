@@ -3,8 +3,8 @@ from fastapi import FastAPI, Depends, HTTPException, status, Response
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import get_db
-from models import Playlist
-from schemas import PlaylistSchema
+from models import Playlist, Song
+from schemas import PlaylistSchema, UserSchema, SongSchema
 
 
 # initialize it
@@ -73,5 +73,21 @@ def delete_playlist(playlist_id: int, db: Session = Depends(get_db)):
         db.commit()
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+
+# get all songs
+@app.get('/songs')
+def playlists(db: Session = Depends(get_db)):
+    songs = db.query(Song).all()
+    return songs
+
+
+#create new route for adding songs to the playlist
+@app.post('/songs')
+def song_added(song: SongSchema, db: Session = Depends(get_db)):
+    print(song_added)
+
+    return {"message" : "Song added successfully "}
 
 
