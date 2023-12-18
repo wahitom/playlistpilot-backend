@@ -17,7 +17,8 @@ def index():
 # get all playlists
 @app.get('/playlists')
 def playlists(db: Session = Depends(get_db)):
-    return []
+    playlists = db.query(Playlist).all()
+    return playlists
 
 # get a single playlist 
 @app.get('/playlists/{playlist_id}')
