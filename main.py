@@ -1,5 +1,5 @@
 #import it
-from fastapi import FastAPI, Depends 
+from fastapi import FastAPI, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
 from database import get_db
 from models import Playlist
@@ -22,8 +22,9 @@ def playlists(db: Session = Depends(get_db)):
 
 # get a single playlist 
 @app.get('/playlists/{playlist_id}')
-def playlist():
-    return {}
+def playlist(playlist_id: int, db: Session = Depends(get_db)):
+    playlist = db.query(Playlist).filter(Playlist.id == playlist_id).first()
+    return playlist
 
 # create a playlist
 @app.post('/playlists') 
@@ -36,7 +37,7 @@ def create_playlist(playlist: PlaylistSchema, db: Session = Depends(get_db)):
     
     # adds the playlist to the transaction ie one by one and if anything fails it all fails 
     db.add(new_playlist)
-    # commit the transaction
+    # commit the transaction 
     db.commit()
     # get the playlist from the database again
     db.refresh(new_playlist)
@@ -49,7 +50,18 @@ def updated_playlist(playlist_id: int):
 
 # delete a playlist
 @app.delete("/playlists/{playlist_id}")
-def delete_playlist(playlist_id: int):
-    return {"message" : f"Playlist {playlist_id} deleted successfully"} 
+def delete_playlist(playlist_id: int, db: Session = Depends(get_db)):
+    deleted_playlist = db.query(Playlist).filter(Playlist.id == playlist_id).first()
+
+    if deleted_playlist == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail = f"Playlist {playlist_id} does not exist")
+    else:
+        deleted_playlist.delete()
+
+        #run the transaction
+        db.commit()
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
