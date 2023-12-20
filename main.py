@@ -1,5 +1,6 @@
 #import it
 from fastapi import FastAPI, Depends, HTTPException, status, Response
+from typing import List
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from database import get_db
@@ -119,3 +120,8 @@ def song_added(song: SongSchema, db: Session = Depends(get_db)):
     return {"message": "Song added successfully"}
 
 
+# Add  a new route for getting all the songs for a playlist
+@app.get('/playlists/{playlist_id}/songs', response_model=List[SongSchema])
+def get_songs_for_playlist(playlist_id: int, db: Session = Depends(get_db)):
+    songs = db.query(Song).filter(Song.playlist_id == playlist_id).all()
+    return songs
